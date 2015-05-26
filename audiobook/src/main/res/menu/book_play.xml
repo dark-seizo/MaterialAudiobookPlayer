@@ -32,8 +32,16 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/media_route_menu_item"
         android:orderInCategory="5"
+        android:title="@string/chromecast"
+        app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
+        app:showAsAction="ifRoom" />
+
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="6"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 </menu>

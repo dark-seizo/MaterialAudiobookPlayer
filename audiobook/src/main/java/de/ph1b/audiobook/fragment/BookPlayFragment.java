@@ -9,8 +9,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.MediaRouteActionProvider;
+import android.support.v7.media.MediaRouteSelector;
+import android.support.v7.media.MediaRouter;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -29,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.cast.CastMediaControlIntent;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -253,6 +258,8 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    MediaRouter mMediaRouter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -261,6 +268,7 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
         db = DataBaseHelper.getInstance(getActivity());
         controller = new ServiceController(getActivity());
         bcm = LocalBroadcastManager.getInstance(getActivity());
+        mMediaRouter = MediaRouter.getInstance(getActivity().getApplicationContext());
     }
 
     private String formatTime(int ms, int duration) {
@@ -310,9 +318,17 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
         dialog.show(getFragmentManager(), JumpToPositionDialogFragment.TAG);
     }
 
+    MediaRouteSelector mMediaRouteSelector = new MediaRouteSelector.Builder()
+            .addControlCategory(CastMediaControlIntent.categoryForCast("AB060B75"))
+            .build();
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.book_play, menu);
+        MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
+        MediaRouteActionProvider mediaRouteActionProvider =
+                (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
+        mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
     }
 
     @Override

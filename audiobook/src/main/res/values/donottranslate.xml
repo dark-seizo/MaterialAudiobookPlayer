@@ -30,4 +30,5 @@
     </string-array>
     <string name="transition_cover">coverTransition</string>
     <string name="transition_fab">fabTransition</string>
+    <string name="chromecast">Chromecast</string>
 </resources>
