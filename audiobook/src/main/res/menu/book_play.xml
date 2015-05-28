@@ -19,21 +19,28 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_equalizer"
+        android:icon="@drawable/ic_equalizer_white_24dp"
+        android:orderInCategory="3"
+        android:title="@string/equalizer"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_time_lapse"
         android:icon="@drawable/ic_clock_fast_white_24dp"
-        android:orderInCategory="3"
+        android:orderInCategory="4"
         android:title="@string/playback_speed"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_time_change"
-        android:orderInCategory="4"
+        android:orderInCategory="5"
         android:title="@string/action_time_change"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="5"
+        android:orderInCategory="6"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 </menu>
