@@ -60,7 +60,7 @@ public class CustomMediaPlayer implements MediaPlayerInterface {
     private MediaPlayer.OnErrorListener onErrorListener;
     private long duration;
     private int channelCount;
-
+    private int sessionId;
 
     @Override
     public void start() {
@@ -134,6 +134,11 @@ public class CustomMediaPlayer implements MediaPlayerInterface {
         } finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public void setAudioSessionId(int sessionId) {
+        this.sessionId = sessionId;
     }
 
     @Override
@@ -329,7 +334,7 @@ public class CustomMediaPlayer implements MediaPlayerInterface {
                     AudioFormat.ENCODING_PCM_16BIT);
             track = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate, format,
                     AudioFormat.ENCODING_PCM_16BIT, minSize * 4,
-                    AudioTrack.MODE_STREAM);
+                    AudioTrack.MODE_STREAM, sessionId);
             sonic = new Sonic(sampleRate, numChannels);
         } finally {
             lock.unlock();

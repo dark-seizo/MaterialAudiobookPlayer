@@ -33,6 +33,7 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
     public static final String MALFORMED_FILE = "malformedFile";
     public static final boolean playerCanSetSpeed = Build.VERSION.SDK_INT >=
             Build.VERSION_CODES.JELLY_BEAN;
+    public static final int AUDIO_SESSION_ID = 42;
     private static final String TAG = MediaPlayerController.class.getSimpleName();
     public static volatile boolean sleepTimerActive = false;
     private static volatile PlayState playState = PlayState.STOPPED;
@@ -63,6 +64,7 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
             } else {
                 player = new AndroidMediaPlayer();
             }
+            player.setAudioSessionId(AUDIO_SESSION_ID);
             state = State.IDLE;
             setPlayState(c, PlayState.STOPPED);
         } finally {

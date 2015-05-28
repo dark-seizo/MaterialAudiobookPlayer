@@ -14,6 +14,8 @@ interface MediaPlayerInterface {
 
     void reset();
 
+    void setAudioSessionId(int sessionId);
+
     void prepare() throws IOException;
 
     void seekTo(int ms);
