@@ -7,11 +7,40 @@ import android.support.annotation.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.ph1b.audiobook.utils.Validate;
 
 
 public class Book implements Comparable<Book> {
+
+    private final HashMap<Short, Short> equalizerLevels = new HashMap<>();
+
+
+    /**
+     * Sets Equalizer band levels. {@link android.media.audiofx.Equalizer#setBandLevel(short, short)}
+     *
+     * @param band  the band
+     * @param level the level
+     */
+    public void setBandLevel(short band, short level) {
+        equalizerLevels.put(band, level);
+    }
+
+    /**
+     * Gets Equalizer band levels. {@link android.media.audiofx.Equalizer#getBandLevel(short)} (short, short)}
+     *
+     * @param band the band to get the level from
+     * @return the level or -1 if it has not been set.
+     */
+    public short getBandLevel(short band) {
+        Short level = equalizerLevels.get(band);
+        return level == null ? -1 : level;
+    }
+
+    public HashMap<Short, Short> getEqualizerLevels() {
+        return equalizerLevels;
+    }
 
     public static final String TAG = Book.class.getSimpleName();
     private static final long ID_UNKNOWN = -1;
@@ -24,7 +53,7 @@ public class Book implements Comparable<Book> {
     @NonNull
     private final String packageName;
     @NonNull
-    private final ArrayList<Bookmark> bookmarks;
+    private final ArrayList<Bookmark> bookmarks = new ArrayList<>();
     private long id = ID_UNKNOWN;
     @NonNull
     private String name;
@@ -50,17 +79,16 @@ public class Book implements Comparable<Book> {
         this.chapters = copyChapters;
         this.type = Type.valueOf(that.type.name());
         this.packageName = that.packageName;
-        ArrayList<Bookmark> copyBookmarks = new ArrayList<>();
         for (Bookmark b : that.bookmarks) {
-            copyBookmarks.add(new Bookmark(b));
+            this.bookmarks.add(new Bookmark(b));
         }
-        this.bookmarks = copyBookmarks;
         this.name = that.name;
         this.author = that.author;
         this.time = that.time;
         this.playbackSpeed = that.playbackSpeed;
         this.currentMediaPath = that.currentMediaPath;
         this.useCoverReplacement = that.useCoverReplacement;
+        this.equalizerLevels.putAll(that.equalizerLevels);
     }
 
     public Book(@NonNull String root,
@@ -70,7 +98,6 @@ public class Book implements Comparable<Book> {
                 @NonNull
                 String currentMediaPath,
                 @NonNull Type type,
-                @NonNull ArrayList<Bookmark> bookmarks,
                 @NonNull Context c) {
         new Validate().notNull(root, name, chapters, currentMediaPath, type)
                 .notEmpty(root, name)
@@ -81,7 +108,6 @@ public class Book implements Comparable<Book> {
         this.author = author;
         this.chapters = chapters;
         this.type = type;
-        this.bookmarks = bookmarks;
         this.packageName = c.getPackageName();
         setPosition(0, currentMediaPath);
         this.currentMediaPath = currentMediaPath;

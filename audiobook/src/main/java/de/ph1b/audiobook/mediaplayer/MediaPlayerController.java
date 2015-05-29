@@ -3,6 +3,7 @@ package de.ph1b.audiobook.mediaplayer;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.audiofx.Equalizer;
 import android.os.Build;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.support.annotation.Nullable;
 import net.jcip.annotations.GuardedBy;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -51,6 +53,7 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
     private ScheduledFuture<?> sleepSand;
     private ScheduledFuture updater = null;
     private volatile int prepareTries = 0;
+    private Equalizer equalizer;
 
     public MediaPlayerController(@NonNull final Context c) {
         lock.lock();
@@ -65,10 +68,23 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
                 player = new AndroidMediaPlayer();
             }
             player.setAudioSessionId(AUDIO_SESSION_ID);
+            equalizer = new Equalizer(0, AUDIO_SESSION_ID);
+            equalizer.setEnabled(true);
             state = State.IDLE;
             setPlayState(c, PlayState.STOPPED);
         } finally {
             lock.unlock();
+        }
+    }
+
+    private void setEqualizerBandLevels() {
+        if (book != null) {
+            HashMap<Short, Short> equalizerLevels = book.getEqualizerLevels();
+            for (short band : equalizerLevels.keySet()) {
+                short level = equalizerLevels.get(band);
+                L.d(TAG, "Set Equalizer level:" + band + "/" + level);
+                equalizer.setBandLevel(band, level);
+            }
         }
     }
 
@@ -102,6 +118,7 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
         lock.lock();
         try {
             this.book = book;
+            setEqualizerBandLevels();
         } finally {
             lock.unlock();
         }

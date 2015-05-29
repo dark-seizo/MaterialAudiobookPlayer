@@ -395,7 +395,11 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
                 bookmarkDialogFragment.show(getFragmentManager(), BookmarkDialogFragment.TAG);
                 return true;
             case R.id.action_equalizer:
-                new EqualizerDialogFragment().show(getFragmentManager(), EqualizerDialogFragment.TAG);
+                EqualizerDialogFragment equalizerDialogFragment = new EqualizerDialogFragment();
+                Bundle equalizerArgs = new Bundle();
+                equalizerArgs.putLong(EqualizerDialogFragment.BOOK_ID, book.getId());
+                equalizerDialogFragment.setArguments(equalizerArgs);
+                equalizerDialogFragment.show(getFragmentManager(), EqualizerDialogFragment.TAG);
                 return true;
             case android.R.id.home:
             case R.id.home:
