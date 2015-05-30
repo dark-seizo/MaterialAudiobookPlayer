@@ -270,10 +270,6 @@ public class AudioService extends Service implements AudioManager.OnAudioFocusCh
                                 handleKeyCode(keyCode);
                             }
                             break;
-                        case ServiceController.CONTROL_SET_PLAYBACK_SPEED:
-                            float speed = intent.getFloatExtra(ServiceController.CONTROL_SET_PLAYBACK_SPEED_EXTRA_SPEED, 1);
-                            controller.setPlaybackSpeed(speed);
-                            break;
                         case ServiceController.CONTROL_TOGGLE_SLEEP_SAND:
                             controller.toggleSleepSand();
                             break;

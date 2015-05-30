@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
+import android.media.audiofx.LoudnessEnhancer;
 import android.os.Build;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
@@ -35,7 +36,7 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
     public static final String MALFORMED_FILE = "malformedFile";
     public static final boolean playerCanSetSpeed = Build.VERSION.SDK_INT >=
             Build.VERSION_CODES.JELLY_BEAN;
-    public static final int AUDIO_SESSION_ID = 42;
+    private static final int AUDIO_SESSION_ID = 42;
     private static final String TAG = MediaPlayerController.class.getSimpleName();
     public static volatile boolean sleepTimerActive = false;
     private static volatile PlayState playState = PlayState.STOPPED;
@@ -54,6 +55,7 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
     private ScheduledFuture updater = null;
     private volatile int prepareTries = 0;
     private Equalizer equalizer;
+    private LoudnessEnhancer loudnessEnhancer;
 
     public MediaPlayerController(@NonNull final Context c) {
         lock.lock();
@@ -70,6 +72,10 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
             player.setAudioSessionId(AUDIO_SESSION_ID);
             equalizer = new Equalizer(0, AUDIO_SESSION_ID);
             equalizer.setEnabled(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                loudnessEnhancer = new LoudnessEnhancer(AUDIO_SESSION_ID);
+                loudnessEnhancer.setEnabled(true);
+            }
             state = State.IDLE;
             setPlayState(c, PlayState.STOPPED);
         } finally {
@@ -77,13 +83,30 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
         }
     }
 
-    private void setEqualizerBandLevels() {
+    /**
+     * Sets audio properties, including {@link Equalizer}, {@link LoudnessEnhancer},
+     * {@link MediaPlayerInterface#setPlaybackSpeed(float)}
+     */
+    private void setAudioProperties() {
         if (book != null) {
+            // equalizer
             HashMap<Short, Short> equalizerLevels = book.getEqualizerLevels();
             for (short band : equalizerLevels.keySet()) {
                 short level = equalizerLevels.get(band);
                 L.d(TAG, "Set Equalizer level:" + band + "/" + level);
                 equalizer.setBandLevel(band, level);
+            }
+
+            // loudness
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                loudnessEnhancer.setTargetGain(book.getLoudnessEnhanced());
+            }
+
+            // speed
+            if (state != State.DEAD) {
+                player.setPlaybackSpeed(book.getPlaybackSpeed());
+            } else {
+                L.e(TAG, "setPlaybackSpeed called in illegal state: " + state);
             }
         }
     }
@@ -118,7 +141,7 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
         lock.lock();
         try {
             this.book = book;
-            setEqualizerBandLevels();
+            setAudioProperties();
         } finally {
             lock.unlock();
         }
@@ -516,27 +539,6 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
         }
     }
 
-    /**
-     * Sets the current playback speed
-     *
-     * @param speed The playback-speed. 1.0 for normal playback, 2.0 for twice the speed, etc.
-     */
-    public void setPlaybackSpeed(float speed) {
-        lock.lock();
-        try {
-            if (book != null) {
-                book.setPlaybackSpeed(speed);
-                db.updateBook(book);
-                if (state != State.DEAD) {
-                    player.setPlaybackSpeed(speed);
-                } else {
-                    L.e(TAG, "setPlaybackSpeed called in illegal state: " + state);
-                }
-            }
-        } finally {
-            lock.unlock();
-        }
-    }
 
     /**
      * After this this object should no longer be used.
@@ -544,6 +546,8 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
     public void onDestroy() {
         player.release();
         equalizer.release();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            loudnessEnhancer.release();
     }
 
     public enum PlayState {

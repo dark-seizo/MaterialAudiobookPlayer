@@ -37,10 +37,9 @@ import java.util.concurrent.TimeUnit;
 
 import de.ph1b.audiobook.R;
 import de.ph1b.audiobook.activity.SettingsActivity;
-import de.ph1b.audiobook.dialog.BookmarkDialogFragment;
 import de.ph1b.audiobook.dialog.AudioDialogFragment;
+import de.ph1b.audiobook.dialog.BookmarkDialogFragment;
 import de.ph1b.audiobook.dialog.JumpToPositionDialogFragment;
-import de.ph1b.audiobook.dialog.PlaybackSpeedDialogFragment;
 import de.ph1b.audiobook.mediaplayer.MediaPlayerController;
 import de.ph1b.audiobook.model.Book;
 import de.ph1b.audiobook.model.Chapter;
@@ -354,8 +353,6 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem timeLapseItem = menu.findItem(R.id.action_time_lapse);
-        timeLapseItem.setVisible(MediaPlayerController.playerCanSetSpeed);
         MenuItem sleepTimerItem = menu.findItem(R.id.action_sleep);
         if (MediaPlayerController.sleepTimerActive) {
             sleepTimerItem.setIcon(R.drawable.ic_alarm_on_white_24dp);
@@ -382,10 +379,6 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
                     BookmarkDialogFragment.addBookmark(book.getId(), date + ": " +
                             getString(R.string.action_sleep), getActivity());
                 }
-                return true;
-            case R.id.action_time_lapse:
-                PlaybackSpeedDialogFragment dialog = new PlaybackSpeedDialogFragment();
-                dialog.show(getFragmentManager(), PlaybackSpeedDialogFragment.TAG);
                 return true;
             case R.id.action_bookmark:
                 BookmarkDialogFragment bookmarkDialogFragment = new BookmarkDialogFragment();

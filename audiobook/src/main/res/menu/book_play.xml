@@ -26,13 +26,6 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_time_lapse"
-        android:icon="@drawable/ic_clock_fast_white_24dp"
-        android:orderInCategory="4"
-        android:title="@string/playback_speed"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_time_change"
         android:orderInCategory="5"
         android:title="@string/action_time_change"
