@@ -15,11 +15,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
 import de.ph1b.audiobook.R;
 import de.ph1b.audiobook.model.Book;
 import de.ph1b.audiobook.model.DataBaseHelper;
@@ -29,13 +24,6 @@ import de.ph1b.audiobook.uitools.ThemeUtil;
 public class EqualizerDialogFragment extends DialogFragment {
     public static final String TAG = EqualizerDialogFragment.class.getSimpleName();
     public static final String BOOK_ID = "BOOK_ID";
-
-    private final ExecutorService bookUpdater = new ThreadPoolExecutor(
-            1, 1, // single thread
-            5, TimeUnit.SECONDS,
-            new LinkedBlockingQueue<Runnable>(2), // queue capacity
-            new ThreadPoolExecutor.DiscardOldestPolicy()
-    );
 
 
     @NonNull
@@ -103,19 +91,16 @@ public class EqualizerDialogFragment extends DialogFragment {
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    final short level = (short) (progress + minEQLevel);
-                    bookUpdater.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            synchronized (db) {
-                                Book book = db.getBook(bookId);
-                                if (book != null) {
-                                    book.setBandLevel(band, level);
-                                    db.updateBook(book);
-                                }
+                    if (fromUser) {
+                        final short level = (short) (progress + minEQLevel);
+                        synchronized (db) {
+                            Book book = db.getBook(bookId);
+                            if (book != null) {
+                                book.setBandLevel(band, level);
+                                db.updateBook(book);
                             }
                         }
-                    });
+                    }
                 }
 
                 @Override
