@@ -128,13 +128,7 @@ public class AudioService extends Service implements AudioManager.OnAudioFocusCh
         public void onReceive(Context context, Intent intent) {
             Book controllerBook = controller.getBook();
             if (controllerBook != null) {
-                for (Book b : db.getActiveBooks()) {
-                    if (b.getId() == controllerBook.getId()) {
-                        controller.updateBook(b);
-                        break;
-                    }
-                }
-
+                controller.updateBook(db.getBook(controllerBook.getId()));
                 notifyChange(META_CHANGED);
             }
         }
