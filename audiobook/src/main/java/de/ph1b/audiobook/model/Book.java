@@ -14,6 +14,9 @@ import de.ph1b.audiobook.utils.Validate;
 
 public class Book implements Comparable<Book> {
 
+    public static final float MIN_SPEED = 0.5F;
+    public static final float MAX_SPEED = 2.0F;
+
     public static final String TAG = Book.class.getSimpleName();
     private static final long ID_UNKNOWN = -1;
     private final HashMap<Short, Short> equalizerLevels = new HashMap<>();
@@ -127,6 +130,8 @@ public class Book implements Comparable<Book> {
      * @see android.media.audiofx.LoudnessEnhancer
      */
     public void setLoudnessEnhanced(int loudnessEnhanced) {
+        if (loudnessEnhanced < 0)
+            throw new IllegalArgumentException("Loudness must be > 0, you set=" + loudnessEnhanced);
         this.loudnessEnhanced = loudnessEnhanced;
     }
 
@@ -306,6 +311,9 @@ public class Book implements Comparable<Book> {
     }
 
     public void setPlaybackSpeed(float playbackSpeed) {
+        if (playbackSpeed < MIN_SPEED || playbackSpeed > MAX_SPEED)
+            throw new IllegalArgumentException("Playback Speed is=" + playbackSpeed + " but mus be" +
+                    " in range of " + MIN_SPEED + " and " + MAX_SPEED);
         this.playbackSpeed = playbackSpeed;
     }
 

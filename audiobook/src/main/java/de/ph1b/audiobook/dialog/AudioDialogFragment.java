@@ -76,10 +76,8 @@ public class AudioDialogFragment extends DialogFragment {
             customView.addView(playbackItems);
 
             DiscreteSeekBar speedBar = (DiscreteSeekBar) playbackItems.findViewById(android.R.id.progress);
-            final float min = 0.5F;
-            final float max = 2.0F;
-            final int internalMin = (int) (min * 100);
-            final int internalMax = (int) (max * 100);
+            final int internalMin = (int) (Book.MIN_SPEED * 100);
+            final int internalMax = (int) (Book.MAX_SPEED * 100);
             speedBar.setProgress((int) (book.getPlaybackSpeed() * 100));
             speedBar.setMin(internalMin);
             speedBar.setMax(internalMax);
