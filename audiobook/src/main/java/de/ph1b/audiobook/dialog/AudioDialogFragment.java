@@ -1,5 +1,6 @@
 package de.ph1b.audiobook.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.media.audiofx.Equalizer;
 import android.os.Build;
@@ -74,15 +75,16 @@ public class AudioDialogFragment extends DialogFragment {
             TextView capture = (TextView) playbackItems.findViewById(android.R.id.text1);
             customView.addView(playbackItems);
 
-            DiscreteSeekBar seekBar = (DiscreteSeekBar) playbackItems.findViewById(android.R.id.progress);
+            DiscreteSeekBar speedBar = (DiscreteSeekBar) playbackItems.findViewById(android.R.id.progress);
             final float min = 0.5F;
             final float max = 2.0F;
             final int internalMin = (int) (min * 100);
             final int internalMax = (int) (max * 100);
-            seekBar.setMin(internalMin);
-            seekBar.setMax(internalMax);
+            speedBar.setProgress((int) (book.getPlaybackSpeed() * 100));
+            speedBar.setMin(internalMin);
+            speedBar.setMax(internalMax);
             final DecimalFormat speedFormat = new DecimalFormat("0.0");
-            seekBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
+            speedBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
                 @Override
                 public int transform(int i) {
                     return i;
@@ -99,6 +101,30 @@ public class AudioDialogFragment extends DialogFragment {
                     return speedFormat.format(speed) + "x";
                 }
             });
+            speedBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+                @Override
+                public void onProgressChanged(DiscreteSeekBar discreteSeekBar, int i, boolean fromUser) {
+                    if (fromUser) {
+                        synchronized (db) {
+                            Book book = db.getBook(bookId);
+                            if (book != null) {
+                                book.setPlaybackSpeed(i / 100F);
+                                db.updateBook(book);
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(DiscreteSeekBar discreteSeekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(DiscreteSeekBar discreteSeekBar) {
+
+                }
+            });
 
             View description = newDescription(inflater);
             TextView left = (TextView) description.findViewById(R.id.des_left);
@@ -110,19 +136,68 @@ public class AudioDialogFragment extends DialogFragment {
             right.setText("2.0x");
         }
 
+        // loudness
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             View playbackItems = newItems();
             TextView capture = (TextView) playbackItems.findViewById(android.R.id.text1);
             customView.addView(playbackItems);
+
+            @SuppressLint("CutPasteId") DiscreteSeekBar loudnessBar =
+                    (DiscreteSeekBar) playbackItems.findViewById(android.R.id.progress);
+            int max = 60;
+            loudnessBar.setMax(max);
+            loudnessBar.setProgress(book.getLoudnessEnhanced());
+            loudnessBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
+                @Override
+                public int transform(int i) {
+                    return i;
+                }
+
+                @Override
+                public String transformToString(int value) {
+                    return value + " dB";
+                }
+
+                @Override
+                public boolean useStringTransform() {
+                    return true;
+                }
+            });
+            loudnessBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+                @Override
+                public void onProgressChanged(DiscreteSeekBar discreteSeekBar, int i, boolean fromUser) {
+                    if (fromUser) {
+                        synchronized (db) {
+                            Book book = db.getBook(bookId);
+                            if (book != null) {
+                                book.setLoudnessEnhanced(i);
+                                db.updateBook(book);
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(DiscreteSeekBar discreteSeekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(DiscreteSeekBar discreteSeekBar) {
+
+                }
+            });
+
 
             View description = newDescription(inflater);
             TextView left = (TextView) description.findViewById(R.id.des_left);
             TextView right = (TextView) description.findViewById(R.id.des_right);
             customView.addView(description);
 
+
             capture.setText("Loudness +");
             left.setText("0 dB");
-            right.setText("80 dB");
+            right.setText(max + " dB");
         }
 
 
@@ -151,7 +226,7 @@ public class AudioDialogFragment extends DialogFragment {
 
                 @Override
                 public String transformToString(int value) {
-                    return formatToDbString(value);
+                    return formatMilliBelToDb(value);
                 }
 
                 @Override
@@ -194,8 +269,8 @@ public class AudioDialogFragment extends DialogFragment {
             TextView left = (TextView) discription.findViewById(R.id.des_left);
             TextView right = (TextView) discription.findViewById(R.id.des_right);
 
-            left.setText(formatToDbString(minEQLevel));
-            right.setText(formatToDbString(maxEQLevel));
+            left.setText(formatMilliBelToDb(minEQLevel));
+            right.setText(formatMilliBelToDb(maxEQLevel));
         }
 
 
@@ -208,7 +283,7 @@ public class AudioDialogFragment extends DialogFragment {
     private final DecimalFormat dbFormat = new DecimalFormat("0");
 
 
-    public String formatToDbString(int level) {
+    public String formatMilliBelToDb(int level) {
         return dbFormat.format(level / 100.0F) + " dB";
     }
 

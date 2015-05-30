@@ -14,36 +14,9 @@ import de.ph1b.audiobook.utils.Validate;
 
 public class Book implements Comparable<Book> {
 
-    private final HashMap<Short, Short> equalizerLevels = new HashMap<>();
-
-
-    /**
-     * Sets Equalizer band levels. {@link android.media.audiofx.Equalizer#setBandLevel(short, short)}
-     *
-     * @param band  the band
-     * @param level the level
-     */
-    public void setBandLevel(short band, short level) {
-        equalizerLevels.put(band, level);
-    }
-
-    /**
-     * Gets Equalizer band levels. {@link android.media.audiofx.Equalizer#getBandLevel(short)} (short, short)}
-     *
-     * @param band the band to get the level from
-     * @return the level or -1 if it has not been set.
-     */
-    public short getBandLevel(short band) {
-        Short level = equalizerLevels.get(band);
-        return level == null ? -1 : level;
-    }
-
-    public HashMap<Short, Short> getEqualizerLevels() {
-        return equalizerLevels;
-    }
-
     public static final String TAG = Book.class.getSimpleName();
     private static final long ID_UNKNOWN = -1;
+    private final HashMap<Short, Short> equalizerLevels = new HashMap<>();
     @NonNull
     private final String root;
     @NonNull
@@ -54,16 +27,17 @@ public class Book implements Comparable<Book> {
     private final String packageName;
     @NonNull
     private final ArrayList<Bookmark> bookmarks = new ArrayList<>();
+    @Nullable
+    private final String author;
     private long id = ID_UNKNOWN;
     @NonNull
     private String name;
-    @Nullable
-    private final String author;
     private int time = 0;
     private float playbackSpeed = 1.0f;
     @NonNull
     private String currentMediaPath;
     private boolean useCoverReplacement = false;
+    private int loudnessEnhanced = 0;
 
     public Book(Book that) {
         new Validate().notNull(that.root, that.name, that.chapters, that.currentMediaPath, that.type)
@@ -111,6 +85,49 @@ public class Book implements Comparable<Book> {
         this.packageName = c.getPackageName();
         setPosition(0, currentMediaPath);
         this.currentMediaPath = currentMediaPath;
+    }
+
+    /**
+     * Sets Equalizer band levels. {@link android.media.audiofx.Equalizer#setBandLevel(short, short)}
+     *
+     * @param band  the band
+     * @param level the level
+     */
+    public void setBandLevel(short band, short level) {
+        equalizerLevels.put(band, level);
+    }
+
+    /**
+     * Gets Equalizer band levels. {@link android.media.audiofx.Equalizer#getBandLevel(short)} (short, short)}
+     *
+     * @param band the band to get the level from
+     * @return the level or -1 if it has not been set.
+     */
+    public short getBandLevel(short band) {
+        Short level = equalizerLevels.get(band);
+        return level == null ? -1 : level;
+    }
+
+    public HashMap<Short, Short> getEqualizerLevels() {
+        return equalizerLevels;
+    }
+
+    /**
+     * @return how much the loudness should be enhanced.
+     * @see android.media.audiofx.LoudnessEnhancer
+     */
+    public int getLoudnessEnhanced() {
+        return loudnessEnhanced;
+    }
+
+    /**
+     * Sets the loudness enhancing.
+     *
+     * @param loudnessEnhanced how much the loudness should be enhanced.
+     * @see android.media.audiofx.LoudnessEnhancer
+     */
+    public void setLoudnessEnhanced(int loudnessEnhanced) {
+        this.loudnessEnhanced = loudnessEnhanced;
     }
 
     @NonNull
