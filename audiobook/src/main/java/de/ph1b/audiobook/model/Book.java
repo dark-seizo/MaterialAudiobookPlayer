@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.ph1b.audiobook.utils.L;
 import de.ph1b.audiobook.utils.Validate;
 
 
@@ -16,6 +17,7 @@ public class Book implements Comparable<Book> {
 
     public static final float MIN_SPEED = 0.5F;
     public static final float MAX_SPEED = 2.0F;
+    public static final int LOUDNESS_ENHANCED_MAX = 60;
 
     public static final String TAG = Book.class.getSimpleName();
     private static final long ID_UNKNOWN = -1;
@@ -130,8 +132,10 @@ public class Book implements Comparable<Book> {
      * @see android.media.audiofx.LoudnessEnhancer
      */
     public void setLoudnessEnhanced(int loudnessEnhanced) {
-        if (loudnessEnhanced < 0)
-            throw new IllegalArgumentException("Loudness must be > 0, you set=" + loudnessEnhanced);
+        if (loudnessEnhanced < 0 || loudnessEnhanced > LOUDNESS_ENHANCED_MAX)
+            throw new IllegalArgumentException("Loudness must be 0 < l < " + LOUDNESS_ENHANCED_MAX +
+                    ", you set=" + loudnessEnhanced);
+        L.d(TAG, "Set loudnessEnhanced to=" + loudnessEnhanced);
         this.loudnessEnhanced = loudnessEnhanced;
     }
 

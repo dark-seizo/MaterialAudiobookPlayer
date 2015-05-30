@@ -142,8 +142,7 @@ public class AudioDialogFragment extends DialogFragment {
 
             @SuppressLint("CutPasteId") DiscreteSeekBar loudnessBar =
                     (DiscreteSeekBar) playbackItems.findViewById(android.R.id.progress);
-            int max = 60;
-            loudnessBar.setMax(max);
+            loudnessBar.setMax(Book.LOUDNESS_ENHANCED_MAX);
             loudnessBar.setProgress(book.getLoudnessEnhanced());
             loudnessBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
                 @Override
@@ -195,7 +194,7 @@ public class AudioDialogFragment extends DialogFragment {
 
             capture.setText("Loudness +");
             left.setText("0 dB");
-            right.setText(max + " dB");
+            right.setText(Book.LOUDNESS_ENHANCED_MAX + " dB");
         }
 
 
