@@ -45,8 +45,9 @@ public class Book implements Comparable<Book> {
     private int loudnessEnhanced = 0;
 
     public Book(Book that) {
-        new Validate().notNull(that.root, that.name, that.chapters, that.currentMediaPath, that.type)
-                .notEmpty(that.root, that.name)
+        new Validate().notNull(that.root, that.name, that.chapters, that.currentMediaPath, that.type,
+                equalizerLevels)
+                .notEmpty(that.root, that.name, that.currentMediaPath)
                 .notEmpty(that.chapters);
 
         this.id = that.id;
@@ -68,6 +69,7 @@ public class Book implements Comparable<Book> {
         this.currentMediaPath = that.currentMediaPath;
         this.useCoverReplacement = that.useCoverReplacement;
         this.equalizerLevels.putAll(that.equalizerLevels);
+        this.loudnessEnhanced = that.loudnessEnhanced;
     }
 
     public Book(@NonNull String root,
