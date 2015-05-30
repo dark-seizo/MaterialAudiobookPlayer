@@ -380,11 +380,8 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
                 }
                 return true;
             case R.id.action_bookmark:
-                BookmarkDialogFragment bookmarkDialogFragment = new BookmarkDialogFragment();
-                Bundle args = new Bundle();
-                args.putLong(BookmarkDialogFragment.BOOK_ID, prefs.getCurrentBookId());
-                bookmarkDialogFragment.setArguments(args);
-                bookmarkDialogFragment.show(getFragmentManager(), BookmarkDialogFragment.TAG);
+                BookmarkDialogFragment.newInstance(prefs.getCurrentBookId())
+                        .show(getFragmentManager(), BookmarkDialogFragment.TAG);
                 return true;
             case R.id.action_equalizer:
                 AudioDialogFragment.newInstance(prefs.getCurrentBookId())
