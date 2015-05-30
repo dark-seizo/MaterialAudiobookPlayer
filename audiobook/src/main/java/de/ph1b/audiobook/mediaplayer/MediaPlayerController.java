@@ -543,6 +543,7 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
      */
     public void onDestroy() {
         player.release();
+        equalizer.release();
     }
 
     public enum PlayState {
