@@ -46,8 +46,6 @@
     <string name="folder_add_book">Ενιαίο βιβλίο</string>
     <string name="folder_add_collection">Φάκελος με πολλαπλά βιβλία</string>
     <string name="for_example">π.χ.</string>
-    <!--PlaybackSpeed-->
-    <string name="playback_speed">Ταχύτητα αναπαραγωγής</string>
     <!--Bookmarks-->
     <string name="bookmark">Σελιδοδείκτης</string>
     <string name="bookmark_edit_title">Επεξεργασία σελιδοδείκτη</string>

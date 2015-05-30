@@ -46,8 +46,6 @@
     <string name="folder_add_book">Pojedyncza książka</string>
     <string name="folder_add_collection">Folder z wieloma książkami</string>
     <string name="for_example">np.</string>
-    <!--PlaybackSpeed-->
-    <string name="playback_speed">Szybkość odtwarzania</string>
     <!--Bookmarks-->
     <string name="bookmark">Zakładki</string>
     <string name="bookmark_edit_title">Edytuj zakładkę</string>

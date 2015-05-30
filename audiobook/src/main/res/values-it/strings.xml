@@ -46,8 +46,6 @@
     <string name="folder_add_book">Libro singolo</string>
     <string name="folder_add_collection">Cartella con più libri</string>
     <string name="for_example">e.g.</string>
-    <!--PlaybackSpeed-->
-    <string name="playback_speed">Velocità di riproduzione</string>
     <!--Bookmarks-->
     <string name="bookmark">Segnalibro</string>
     <string name="bookmark_edit_title">Modifica segnalibro</string>

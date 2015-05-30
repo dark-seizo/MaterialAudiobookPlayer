@@ -31,7 +31,7 @@ import de.ph1b.audiobook.uitools.ThemeUtil;
 
 public class AudioDialogFragment extends DialogFragment {
     public static final String TAG = AudioDialogFragment.class.getSimpleName();
-    public static final String BOOK_ID = "BOOK_ID";
+    private static final String BOOK_ID = "BOOK_ID";
     private final DecimalFormat dbFormat = new DecimalFormat("0");
     private Equalizer equalizer;
 
@@ -284,15 +284,15 @@ public class AudioDialogFragment extends DialogFragment {
                 .build();
     }
 
-    public String formatMilliBelToDb(int level) {
+    private String formatMilliBelToDb(int level) {
         return dbFormat.format(level / 100.0F) + " dB";
     }
 
-    public View newDescription(LayoutInflater inflater) {
+    private View newDescription(LayoutInflater inflater) {
         return inflater.inflate(R.layout.dialog_sound, null, false);
     }
 
-    public View newItems() {
+    private View newItems() {
         // init row
         TableRow tableRow = new TableRow(getActivity());
         TableRow.LayoutParams tableRowLayoutParams = new TableRow.LayoutParams();

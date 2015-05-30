@@ -47,8 +47,6 @@
     <string name="folder_add_book">Одна книга</string>
     <string name="folder_add_collection">Несколько книг в одной папке</string>
     <string name="for_example">например</string>
-    <!--PlaybackSpeed-->
-    <string name="playback_speed">Скорость воспроизведения</string>
     <!--Bookmarks-->
     <string name="bookmark">Закладки</string>
     <string name="bookmark_edit_title">Редактировать</string>

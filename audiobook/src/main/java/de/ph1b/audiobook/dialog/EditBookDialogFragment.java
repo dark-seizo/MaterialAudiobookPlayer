@@ -45,8 +45,8 @@ import de.ph1b.audiobook.utils.Communication;
 import de.ph1b.audiobook.utils.L;
 
 public class EditBookDialogFragment extends DialogFragment implements View.OnClickListener {
-    public static final String BOOK_COVER = "BOOK_COVER";
-    public static final int REPLACEMENT_DIMEN = 500;
+    private static final String BOOK_COVER = "BOOK_COVER";
+    private static final int REPLACEMENT_DIMEN = 500;
     public static final String TAG = EditBookDialogFragment.class.getSimpleName();
     private static final String COVER_POSITION = "COVER_POSITION";
     private final ExecutorService executor = Executors.newSingleThreadExecutor();

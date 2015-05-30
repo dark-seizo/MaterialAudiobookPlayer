@@ -47,8 +47,6 @@
     <string name="folder_add_book">Книга</string>
     <string name="folder_add_collection">Папка з декількома книгами</string>
     <string name="for_example">наприклад</string>
-    <!-- PlaybackSpeed -->
-    <string name="playback_speed">Швидкість програвання</string>
     <!-- Bookmarks -->
     <string name="bookmark">Закладка</string>
     <string name="bookmark_edit_title">Редагувати закладку</string>

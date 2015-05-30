@@ -47,8 +47,6 @@
     <string name="folder_add_book">Ein Buch</string>
     <string name="folder_add_collection">Ordner mit mehreren Büchern</string>
     <string name="for_example">z.B.</string>
-    <!--PlaybackSpeed-->
-    <string name="playback_speed">Geschwindigkeit</string>
     <!--Bookmarks-->
     <string name="bookmark">Lesezeichen</string>
     <string name="bookmark_edit_title">Lesezeichen bearbeiten</string>

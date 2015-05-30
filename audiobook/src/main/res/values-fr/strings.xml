@@ -46,8 +46,6 @@
     <string name="folder_add_book">Livre unique</string>
     <string name="folder_add_collection">Dossier de plusieurs livres</string>
     <string name="for_example">Par ex.</string>
-    <!--PlaybackSpeed-->
-    <string name="playback_speed">Vitesse de lecture</string>
     <!--Bookmarks-->
     <string name="bookmark">Marque-page</string>
     <string name="bookmark_edit_title">Modifier le marque-page</string>

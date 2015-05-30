@@ -46,8 +46,6 @@
     <string name="folder_add_book">폴더에 책 한권</string>
     <string name="folder_add_collection">폴더에 책 여러 권</string>
     <string name="for_example">예시 </string>
-    <!--PlaybackSpeed-->
-    <string name="playback_speed">재생 속도</string>
     <!--Bookmarks-->
     <string name="bookmark">책갈피</string>
     <string name="bookmark_edit_title">책갈피 편집</string>
