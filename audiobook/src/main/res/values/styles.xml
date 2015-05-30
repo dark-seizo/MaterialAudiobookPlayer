@@ -44,6 +44,7 @@
         <item name="more">@drawable/ic_more_vert_grey600_24dp</item>
 
         <item name="android:seekBarStyle">@style/seek_style</item>
+        <item name="discreteSeekBarStyle">@style/discrete_seekbar_style</item>
 
         <item name="text_primary">@color/light_text_primary</item>
         <item name="text_secondary">@color/light_text_secondary</item>
@@ -92,6 +93,7 @@
         <item name="more">@drawable/ic_more_vert_white_24dp</item>
 
         <item name="android:seekBarStyle">@style/seek_style</item>
+        <item name="discreteSeekBarStyle">@style/discrete_seekbar_style</item>
 
         <item name="text_primary">@color/dark_text_primary</item>
         <item name="text_secondary">@color/dark_text_secondary</item>
@@ -120,6 +122,11 @@
     <style name="toolbar_popup_light" parent="@style/ThemeOverlay.AppCompat.Light" />
 
     <style name="toolbar_popup_dark" parent="@style/ThemeOverlay.AppCompat" />
+
+    <style name="discrete_seekbar_style" parent="@style/DefaultSeekBar">
+        <item name="dsb_progressColor">@color/accent</item>
+        <item name="dsb_indicatorColor">@color/accent</item>
+    </style>
 
     <style name="seek_style">
         <item name="android:indeterminateOnly">false</item>
