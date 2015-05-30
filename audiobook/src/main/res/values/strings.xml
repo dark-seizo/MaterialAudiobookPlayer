@@ -48,8 +48,10 @@
     <string name="folder_add_book">Single book</string>
     <string name="folder_add_collection">Folder with multiple books</string>
     <string name="for_example">e.g.</string>
-    <!--PlaybackSpeed-->
-    <string name="playback_speed">Playback speed</string>
+    <!--Audio Prefs Dialog-->
+    <string name="audio_settings_title">Audio</string>
+    <string name="speed">Speed</string>
+    <string name="loudness">Loudness</string>
     <!--Bookmarks-->
     <string name="bookmark">Bookmark</string>
     <string name="bookmark_edit_title">Edit bookmark</string>

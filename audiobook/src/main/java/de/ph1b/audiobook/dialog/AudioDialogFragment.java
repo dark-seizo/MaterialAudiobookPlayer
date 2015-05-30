@@ -32,7 +32,7 @@ import de.ph1b.audiobook.uitools.ThemeUtil;
 public class AudioDialogFragment extends DialogFragment {
     public static final String TAG = AudioDialogFragment.class.getSimpleName();
     public static final String BOOK_ID = "BOOK_ID";
-
+    private final DecimalFormat dbFormat = new DecimalFormat("0");
     private Equalizer equalizer;
 
     public static AudioDialogFragment newInstance(long bookId) {
@@ -56,7 +56,6 @@ public class AudioDialogFragment extends DialogFragment {
 
         equalizer.release();
     }
-
 
     @NonNull
     @Override
@@ -137,7 +136,7 @@ public class AudioDialogFragment extends DialogFragment {
             TextView right = (TextView) description.findViewById(R.id.des_right);
             customView.addView(description);
 
-            capture.setText(R.string.playback_speed);
+            capture.setText(R.string.speed);
             left.setText("0.5x");
             right.setText("2.0x");
         }
@@ -200,7 +199,7 @@ public class AudioDialogFragment extends DialogFragment {
             customView.addView(description);
 
 
-            capture.setText("Loudness +");
+            capture.setText(getString(R.string.loudness) + "+");
             left.setText("0 dB");
             right.setText(Book.LOUDNESS_ENHANCED_MAX + " dB");
         }
@@ -269,10 +268,10 @@ public class AudioDialogFragment extends DialogFragment {
             });
 
 
-            View discription = newDescription(inflater);
-            customView.addView(discription);
-            TextView left = (TextView) discription.findViewById(R.id.des_left);
-            TextView right = (TextView) discription.findViewById(R.id.des_right);
+            View description = newDescription(inflater);
+            customView.addView(description);
+            TextView left = (TextView) description.findViewById(R.id.des_left);
+            TextView right = (TextView) description.findViewById(R.id.des_right);
 
             left.setText(formatMilliBelToDb(minEQLevel));
             right.setText(formatMilliBelToDb(maxEQLevel));
@@ -280,13 +279,10 @@ public class AudioDialogFragment extends DialogFragment {
 
 
         return new MaterialDialog.Builder(getActivity())
-                .title(R.string.equalizer)
+                .title(R.string.audio_settings_title)
                 .customView(customView, true)
                 .build();
     }
-
-    private final DecimalFormat dbFormat = new DecimalFormat("0");
-
 
     public String formatMilliBelToDb(int level) {
         return dbFormat.format(level / 100.0F) + " dB";
@@ -324,6 +320,4 @@ public class AudioDialogFragment extends DialogFragment {
 
         return tableRow;
     }
-
-
 }

@@ -19,10 +19,10 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_equalizer"
+        android:id="@+id/action_audio"
         android:icon="@drawable/ic_equalizer_white_24dp"
         android:orderInCategory="3"
-        android:title="@string/equalizer"
+        android:title="@string/audio_settings_title"
         app:showAsAction="ifRoom" />
 
     <item
