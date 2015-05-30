@@ -85,7 +85,6 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
         }
     };
     private ServiceController controller;
-    private Book book;
     private DataBaseHelper db;
     private final BroadcastReceiver onBookSetChanged = new BroadcastReceiver() {
         @Override
@@ -94,7 +93,7 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
              * Setting position as a tag, so we can make sure onItemSelected is only fired when
              * the user changes the position himself.
              */
-            book = db.getBook(book.getId());
+            Book book = db.getBook(prefs.getCurrentBookId());
             if (book == null) {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content, new BookPlayFragment(), BookPlayFragment.TAG)
@@ -129,7 +128,7 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_play, container, false);
 
-        book = db.getBook(prefs.getCurrentBookId());
+        final Book book = db.getBook(prefs.getCurrentBookId());
         if (book == null) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.content, new BookPlayFragment(), BookPlayFragment.TAG)
@@ -376,21 +375,21 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
                     String date = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(), DateUtils.FORMAT_SHOW_DATE |
                             DateUtils.FORMAT_SHOW_TIME |
                             DateUtils.FORMAT_NUMERIC_DATE);
-                    BookmarkDialogFragment.addBookmark(book.getId(), date + ": " +
+                    BookmarkDialogFragment.addBookmark(prefs.getCurrentBookId(), date + ": " +
                             getString(R.string.action_sleep), getActivity());
                 }
                 return true;
             case R.id.action_bookmark:
                 BookmarkDialogFragment bookmarkDialogFragment = new BookmarkDialogFragment();
                 Bundle args = new Bundle();
-                args.putLong(BookmarkDialogFragment.BOOK_ID, book.getId());
+                args.putLong(BookmarkDialogFragment.BOOK_ID, prefs.getCurrentBookId());
                 bookmarkDialogFragment.setArguments(args);
                 bookmarkDialogFragment.show(getFragmentManager(), BookmarkDialogFragment.TAG);
                 return true;
             case R.id.action_equalizer:
                 AudioDialogFragment audioDialogFragment = new AudioDialogFragment();
                 Bundle equalizerArgs = new Bundle();
-                equalizerArgs.putLong(AudioDialogFragment.BOOK_ID, book.getId());
+                equalizerArgs.putLong(AudioDialogFragment.BOOK_ID, prefs.getCurrentBookId());
                 audioDialogFragment.setArguments(equalizerArgs);
                 audioDialogFragment.show(getFragmentManager(), AudioDialogFragment.TAG);
                 return true;
