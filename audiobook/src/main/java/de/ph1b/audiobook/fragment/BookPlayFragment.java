@@ -387,11 +387,8 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
                 bookmarkDialogFragment.show(getFragmentManager(), BookmarkDialogFragment.TAG);
                 return true;
             case R.id.action_equalizer:
-                AudioDialogFragment audioDialogFragment = new AudioDialogFragment();
-                Bundle equalizerArgs = new Bundle();
-                equalizerArgs.putLong(AudioDialogFragment.BOOK_ID, prefs.getCurrentBookId());
-                audioDialogFragment.setArguments(equalizerArgs);
-                audioDialogFragment.show(getFragmentManager(), AudioDialogFragment.TAG);
+                AudioDialogFragment.newInstance(prefs.getCurrentBookId())
+                        .show(getFragmentManager(), AudioDialogFragment.TAG);
                 return true;
             case android.R.id.home:
             case R.id.home:

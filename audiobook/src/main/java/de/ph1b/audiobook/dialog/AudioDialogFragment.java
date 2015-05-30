@@ -35,6 +35,14 @@ public class AudioDialogFragment extends DialogFragment {
 
     private Equalizer equalizer;
 
+    public static AudioDialogFragment newInstance(long bookId) {
+        AudioDialogFragment audioDialogFragment = new AudioDialogFragment();
+        Bundle equalizerArgs = new Bundle();
+        equalizerArgs.putLong(AudioDialogFragment.BOOK_ID, bookId);
+        audioDialogFragment.setArguments(equalizerArgs);
+        return audioDialogFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
