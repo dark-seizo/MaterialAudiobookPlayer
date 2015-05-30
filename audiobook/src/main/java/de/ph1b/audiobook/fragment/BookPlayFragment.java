@@ -339,10 +339,7 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
     }
 
     private void launchJumpToPositionDialog() {
-        JumpToPositionDialogFragment dialog = new JumpToPositionDialogFragment();
-        Bundle bundle = new Bundle();
-        dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), JumpToPositionDialogFragment.TAG);
+        new JumpToPositionDialogFragment().show(getFragmentManager(), JumpToPositionDialogFragment.TAG);
     }
 
     @Override
