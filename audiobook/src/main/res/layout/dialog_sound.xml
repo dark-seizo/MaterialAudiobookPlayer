@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <View />
+
+    <RelativeLayout android:layout_width="match_parent">
+
+        <TextView
+            android:id="@+id/des_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:textColor="?attr/text_secondary"
+            android:textSize="12sp"
+            tools:text="text 1" />
+
+        <TextView
+            android:id="@+id/des_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="?attr/text_secondary"
+            android:textSize="12sp"
+            tools:text="text2" />
+
+    </RelativeLayout>
+
+</TableRow>

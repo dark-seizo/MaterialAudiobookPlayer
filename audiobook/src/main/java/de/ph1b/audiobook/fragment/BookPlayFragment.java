@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 import de.ph1b.audiobook.R;
 import de.ph1b.audiobook.activity.SettingsActivity;
 import de.ph1b.audiobook.dialog.BookmarkDialogFragment;
-import de.ph1b.audiobook.dialog.EqualizerDialogFragment;
+import de.ph1b.audiobook.dialog.AudioDialogFragment;
 import de.ph1b.audiobook.dialog.JumpToPositionDialogFragment;
 import de.ph1b.audiobook.dialog.PlaybackSpeedDialogFragment;
 import de.ph1b.audiobook.mediaplayer.MediaPlayerController;
@@ -395,11 +395,11 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
                 bookmarkDialogFragment.show(getFragmentManager(), BookmarkDialogFragment.TAG);
                 return true;
             case R.id.action_equalizer:
-                EqualizerDialogFragment equalizerDialogFragment = new EqualizerDialogFragment();
+                AudioDialogFragment audioDialogFragment = new AudioDialogFragment();
                 Bundle equalizerArgs = new Bundle();
-                equalizerArgs.putLong(EqualizerDialogFragment.BOOK_ID, book.getId());
-                equalizerDialogFragment.setArguments(equalizerArgs);
-                equalizerDialogFragment.show(getFragmentManager(), EqualizerDialogFragment.TAG);
+                equalizerArgs.putLong(AudioDialogFragment.BOOK_ID, book.getId());
+                audioDialogFragment.setArguments(equalizerArgs);
+                audioDialogFragment.show(getFragmentManager(), AudioDialogFragment.TAG);
                 return true;
             case android.R.id.home:
             case R.id.home:
