@@ -9,7 +9,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.ReentrantLock;
 
 import de.ph1b.audiobook.model.Book;
-import de.ph1b.audiobook.model.Bookmark;
 import de.ph1b.audiobook.model.Chapter;
 import de.ph1b.audiobook.model.DataBaseHelper;
 
@@ -76,8 +75,8 @@ public class BookActivityTest extends ActivityInstrumentationTestCase2<BookActiv
         ArrayList<Chapter> chapters = new ArrayList<>();
         chapters.add(new Chapter(randomString(), randomString(), rnd.nextInt()));
 
-        return new Book(randomString(), randomString(), randomString(), chapters, chapters.get(0).getPath(),
-                Book.Type.COLLECTION_FILE, new ArrayList<Bookmark>(), getActivity());
+        return new Book(randomString(), randomString(), randomString(), chapters,
+                chapters.get(0).getPath(), Book.Type.COLLECTION_FILE, getActivity());
 
     }
 
