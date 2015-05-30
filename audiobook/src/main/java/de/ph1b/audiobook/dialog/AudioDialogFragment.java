@@ -79,10 +79,10 @@ public class AudioDialogFragment extends DialogFragment {
 
         if (MediaPlayerController.playerCanSetSpeed) {
             View playbackItems = newItems();
-            TextView capture = (TextView) playbackItems.findViewById(android.R.id.text1);
+            TextView capture = (TextView) playbackItems.findViewById(R.id.text1);
             customView.addView(playbackItems);
 
-            DiscreteSeekBar speedBar = (DiscreteSeekBar) playbackItems.findViewById(android.R.id.progress);
+            DiscreteSeekBar speedBar = (DiscreteSeekBar) playbackItems.findViewById(R.id.seek1);
             final int internalMin = (int) (Book.MIN_SPEED * 100);
             final int internalMax = (int) (Book.MAX_SPEED * 100);
             speedBar.setProgress((int) (book.getPlaybackSpeed() * 100));
@@ -144,11 +144,11 @@ public class AudioDialogFragment extends DialogFragment {
         // loudness
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             View playbackItems = newItems();
-            TextView capture = (TextView) playbackItems.findViewById(android.R.id.text1);
+            TextView capture = (TextView) playbackItems.findViewById(R.id.text1);
             customView.addView(playbackItems);
 
             @SuppressLint("CutPasteId") DiscreteSeekBar loudnessBar =
-                    (DiscreteSeekBar) playbackItems.findViewById(android.R.id.progress);
+                    (DiscreteSeekBar) playbackItems.findViewById(R.id.seek1);
             loudnessBar.setMax(Book.LOUDNESS_ENHANCED_MAX);
             loudnessBar.setProgress(book.getLoudnessEnhanced());
             loudnessBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
@@ -213,8 +213,8 @@ public class AudioDialogFragment extends DialogFragment {
             // init views
             View tableRow = newItems();
             customView.addView(tableRow);
-            TextView frequencyView = (TextView) tableRow.findViewById(android.R.id.text1);
-            DiscreteSeekBar seekBar = (DiscreteSeekBar) tableRow.findViewById(android.R.id.progress);
+            TextView frequencyView = (TextView) tableRow.findViewById(R.id.text1);
+            DiscreteSeekBar seekBar = (DiscreteSeekBar) tableRow.findViewById(R.id.seek1);
 
             // set text
             frequencyView.setText((equalizer.getCenterFreq(band) / 1000) + " Hz");
@@ -300,7 +300,7 @@ public class AudioDialogFragment extends DialogFragment {
 
         // init text
         TextView frequencyView = new TextView(getActivity());
-        frequencyView.setId(android.R.id.text1);
+        frequencyView.setId(R.id.text1);
         frequencyView.setTextColor(getResources().getColor(ThemeUtil.getResourceId(getActivity(),
                 R.attr.text_secondary)));
         frequencyView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension
@@ -312,7 +312,7 @@ public class AudioDialogFragment extends DialogFragment {
 
         // init seekBar
         DiscreteSeekBar seekBar = new DiscreteSeekBar(getActivity());
-        seekBar.setId(android.R.id.progress);
+        seekBar.setId(R.id.seek1);
         TableRow.LayoutParams seekBarLayoutParams = new TableRow.LayoutParams();
         seekBarLayoutParams.weight = 1;
         seekBar.setLayoutParams(seekBarLayoutParams);
