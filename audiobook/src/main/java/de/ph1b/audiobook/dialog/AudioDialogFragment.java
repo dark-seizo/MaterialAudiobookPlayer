@@ -33,7 +33,6 @@ public class AudioDialogFragment extends DialogFragment {
     public static final String TAG = AudioDialogFragment.class.getSimpleName();
     private static final String BOOK_ID = "BOOK_ID";
     private final DecimalFormat dbFormat = new DecimalFormat("0");
-    private Equalizer equalizer;
 
     public static AudioDialogFragment newInstance(long bookId) {
         AudioDialogFragment audioDialogFragment = new AudioDialogFragment();
@@ -41,20 +40,6 @@ public class AudioDialogFragment extends DialogFragment {
         equalizerArgs.putLong(AudioDialogFragment.BOOK_ID, bookId);
         audioDialogFragment.setArguments(equalizerArgs);
         return audioDialogFragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        equalizer = new Equalizer(0, 52);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroyView();
-
-        equalizer.release();
     }
 
     @NonNull
@@ -156,7 +141,7 @@ public class AudioDialogFragment extends DialogFragment {
 
                 @Override
                 public String transformToString(int value) {
-                    return value + " dB";
+                    return (value / 100) + " dB";
                 }
 
                 @Override
@@ -195,78 +180,83 @@ public class AudioDialogFragment extends DialogFragment {
 
             capture.setText(getString(R.string.loudness) + "+");
             left.setText("0 dB");
-            right.setText(Book.LOUDNESS_ENHANCED_MAX + " dB");
+            right.setText((Book.LOUDNESS_ENHANCED_MAX / 100) + " dB");
         }
 
+        Equalizer equalizer = new Equalizer(0, 500);
+        try {
+            final short minEQLevel = equalizer.getBandLevelRange()[0];
+            final short maxEQLevel = equalizer.getBandLevelRange()[1];
+            for (short i = 0; i < equalizer.getNumberOfBands(); i++) {
+                final short band = i;
 
-        final short minEQLevel = equalizer.getBandLevelRange()[0];
-        final short maxEQLevel = equalizer.getBandLevelRange()[1];
-        for (short i = 0; i < equalizer.getNumberOfBands(); i++) {
-            final short band = i;
+                // init views
+                View tableRow = newItems();
+                customView.addView(tableRow);
+                TextView frequencyView = (TextView) tableRow.findViewById(R.id.text1);
+                DiscreteSeekBar equalizerBar = (DiscreteSeekBar) tableRow.findViewById(R.id.seek1);
 
-            // init views
-            View tableRow = newItems();
-            customView.addView(tableRow);
-            TextView frequencyView = (TextView) tableRow.findViewById(R.id.text1);
-            DiscreteSeekBar equalizerBar = (DiscreteSeekBar) tableRow.findViewById(R.id.seek1);
+                // set text
+                frequencyView.setText((equalizer.getCenterFreq(band) / 1000) + " Hz");
 
-            // set text
-            frequencyView.setText((equalizer.getCenterFreq(band) / 1000) + " Hz");
+                // set seekBar
+                equalizerBar.setMin(minEQLevel);
+                equalizerBar.setMax(maxEQLevel);
+                equalizerBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
+                    @Override
+                    public int transform(int i) {
+                        return i;
+                    }
 
-            // set seekBar
-            equalizerBar.setMin(minEQLevel);
-            equalizerBar.setMax(maxEQLevel);
-            equalizerBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
-                @Override
-                public int transform(int i) {
-                    return i;
+                    @Override
+                    public String transformToString(int value) {
+                        return formatMilliBelToDb(value);
+                    }
+
+                    @Override
+                    public boolean useStringTransform() {
+                        return true;
+                    }
+                });
+                short level = book.getBandLevel(band);
+                if (level == -1) { // if band has not been set yet, set default band
+                    level = equalizer.getBandLevel(band);
                 }
+                equalizerBar.setProgress(level - minEQLevel);
+                equalizerBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+                    @Override
+                    public void onProgressChanged(DiscreteSeekBar seekBar, int progress, boolean fromUser) {
+                    }
 
-                @Override
-                public String transformToString(int value) {
-                    return formatMilliBelToDb(value);
-                }
+                    @Override
+                    public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+                    }
 
-                @Override
-                public boolean useStringTransform() {
-                    return true;
-                }
-            });
-            short level = book.getBandLevel(band);
-            if (level == -1) { // if band has not been set yet, set default band
-                level = equalizer.getBandLevel(band);
-            }
-            equalizerBar.setProgress(level - minEQLevel);
-            equalizerBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
-                @Override
-                public void onProgressChanged(DiscreteSeekBar seekBar, int progress, boolean fromUser) {
-                }
-
-                @Override
-                public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-                    final short level = (short) (seekBar.getProgress() + minEQLevel);
-                    synchronized (db) {
-                        Book book = db.getBook(bookId);
-                        if (book != null) {
-                            book.setBandLevel(band, level);
-                            db.updateBook(book);
+                    @Override
+                    public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+                        final short level = (short) (seekBar.getProgress() + minEQLevel);
+                        synchronized (db) {
+                            Book book = db.getBook(bookId);
+                            if (book != null) {
+                                book.setBandLevel(band, level);
+                                db.updateBook(book);
+                            }
                         }
                     }
-                }
-            });
+                });
 
 
-            View description = newDescription(inflater);
-            customView.addView(description);
-            TextView left = (TextView) description.findViewById(R.id.des_left);
-            TextView right = (TextView) description.findViewById(R.id.des_right);
+                View description = newDescription(inflater);
+                customView.addView(description);
+                TextView left = (TextView) description.findViewById(R.id.des_left);
+                TextView right = (TextView) description.findViewById(R.id.des_right);
 
-            left.setText(formatMilliBelToDb(minEQLevel));
-            right.setText(formatMilliBelToDb(maxEQLevel));
+                left.setText(formatMilliBelToDb(minEQLevel));
+                right.setText(formatMilliBelToDb(maxEQLevel));
+            }
+        } finally {
+            equalizer.setEnabled(false);
+            equalizer.release();
         }
 
 

@@ -70,8 +70,10 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
                 player = new AndroidMediaPlayer();
             }
             player.setAudioSessionId(AUDIO_SESSION_ID);
-            equalizer = new Equalizer(0, AUDIO_SESSION_ID);
-            equalizer.setEnabled(true);
+            equalizer = new Equalizer(1, AUDIO_SESSION_ID);
+            int equalizerEnabled = equalizer.setEnabled(true);
+            setAudioProperties();
+            L.d(TAG, "equalizerEnabled=" + equalizerEnabled);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 loudnessEnhancer = new LoudnessEnhancer(AUDIO_SESSION_ID);
                 loudnessEnhancer.setEnabled(true);
@@ -93,7 +95,12 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
             HashMap<Short, Short> equalizerLevels = book.getEqualizerLevels();
             for (short band : equalizerLevels.keySet()) {
                 short level = equalizerLevels.get(band);
-                equalizer.setBandLevel(band, level);
+                short equalizerLevel = equalizer.getBandLevel(band);
+                float ratio = ((float) level) / ((float) equalizerLevel);
+                if (ratio > 1.05F || ratio < 0.95F) {
+                    L.d(TAG, "setBandLevel(" + band + ", " + level + ")" + " because equalizer has:" + band + "|" + equalizerLevel);
+                    equalizer.setBandLevel(band, level);
+                }
             }
 
             // loudness
@@ -544,9 +551,12 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
      */
     public void onDestroy() {
         player.release();
+        equalizer.setEnabled(false);
         equalizer.release();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            loudnessEnhancer.setEnabled(false);
             loudnessEnhancer.release();
+        }
     }
 
     public enum PlayState {

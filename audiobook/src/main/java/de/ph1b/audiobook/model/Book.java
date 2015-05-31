@@ -17,7 +17,7 @@ public class Book implements Comparable<Book> {
 
     public static final float MIN_SPEED = 0.5F;
     public static final float MAX_SPEED = 2.0F;
-    public static final int LOUDNESS_ENHANCED_MAX = 60;
+    public static final int LOUDNESS_ENHANCED_MAX = 4000;
 
     public static final String TAG = Book.class.getSimpleName();
     private static final long ID_UNKNOWN = -1;
