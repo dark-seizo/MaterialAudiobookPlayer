@@ -109,15 +109,6 @@ public class AudioDialogFragment extends DialogFragment {
             speedBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
                 @Override
                 public void onProgressChanged(DiscreteSeekBar discreteSeekBar, int i, boolean fromUser) {
-                    if (fromUser) {
-                        synchronized (db) {
-                            Book book = db.getBook(bookId);
-                            if (book != null) {
-                                book.setPlaybackSpeed(i / 100F);
-                                db.updateBook(book);
-                            }
-                        }
-                    }
                 }
 
                 @Override
@@ -127,7 +118,13 @@ public class AudioDialogFragment extends DialogFragment {
 
                 @Override
                 public void onStopTrackingTouch(DiscreteSeekBar discreteSeekBar) {
-
+                    synchronized (db) {
+                        Book book = db.getBook(bookId);
+                        if (book != null) {
+                            book.setPlaybackSpeed(discreteSeekBar.getProgress() / 100F);
+                            db.updateBook(book);
+                        }
+                    }
                 }
             });
 
@@ -170,15 +167,6 @@ public class AudioDialogFragment extends DialogFragment {
             loudnessBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
                 @Override
                 public void onProgressChanged(DiscreteSeekBar discreteSeekBar, int i, boolean fromUser) {
-                    if (fromUser) {
-                        synchronized (db) {
-                            Book book = db.getBook(bookId);
-                            if (book != null) {
-                                book.setLoudnessEnhanced(i);
-                                db.updateBook(book);
-                            }
-                        }
-                    }
                 }
 
                 @Override
@@ -188,7 +176,13 @@ public class AudioDialogFragment extends DialogFragment {
 
                 @Override
                 public void onStopTrackingTouch(DiscreteSeekBar discreteSeekBar) {
-
+                    synchronized (db) {
+                        Book book = db.getBook(bookId);
+                        if (book != null) {
+                            book.setLoudnessEnhanced(discreteSeekBar.getProgress());
+                            db.updateBook(book);
+                        }
+                    }
                 }
             });
 
@@ -214,15 +208,15 @@ public class AudioDialogFragment extends DialogFragment {
             View tableRow = newItems();
             customView.addView(tableRow);
             TextView frequencyView = (TextView) tableRow.findViewById(R.id.text1);
-            DiscreteSeekBar seekBar = (DiscreteSeekBar) tableRow.findViewById(R.id.seek1);
+            DiscreteSeekBar equalizerBar = (DiscreteSeekBar) tableRow.findViewById(R.id.seek1);
 
             // set text
             frequencyView.setText((equalizer.getCenterFreq(band) / 1000) + " Hz");
 
             // set seekBar
-            seekBar.setMin(minEQLevel);
-            seekBar.setMax(maxEQLevel);
-            seekBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
+            equalizerBar.setMin(minEQLevel);
+            equalizerBar.setMax(maxEQLevel);
+            equalizerBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
                 @Override
                 public int transform(int i) {
                     return i;
@@ -242,20 +236,10 @@ public class AudioDialogFragment extends DialogFragment {
             if (level == -1) { // if band has not been set yet, set default band
                 level = equalizer.getBandLevel(band);
             }
-            seekBar.setProgress(level - minEQLevel);
-            seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+            equalizerBar.setProgress(level - minEQLevel);
+            equalizerBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
                 @Override
                 public void onProgressChanged(DiscreteSeekBar seekBar, int progress, boolean fromUser) {
-                    if (fromUser) {
-                        final short level = (short) (progress + minEQLevel);
-                        synchronized (db) {
-                            Book book = db.getBook(bookId);
-                            if (book != null) {
-                                book.setBandLevel(band, level);
-                                db.updateBook(book);
-                            }
-                        }
-                    }
                 }
 
                 @Override
@@ -264,6 +248,14 @@ public class AudioDialogFragment extends DialogFragment {
 
                 @Override
                 public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+                    final short level = (short) (seekBar.getProgress() + minEQLevel);
+                    synchronized (db) {
+                        Book book = db.getBook(bookId);
+                        if (book != null) {
+                            book.setBandLevel(band, level);
+                            db.updateBook(book);
+                        }
+                    }
                 }
             });
 

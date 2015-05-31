@@ -93,7 +93,6 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
             HashMap<Short, Short> equalizerLevels = book.getEqualizerLevels();
             for (short band : equalizerLevels.keySet()) {
                 short level = equalizerLevels.get(band);
-                L.d(TAG, "Set Equalizer level:" + band + "/" + level);
                 equalizer.setBandLevel(band, level);
             }
 

@@ -66,7 +66,7 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
     };
     private TextView playedTimeView;
     private SeekBar seekBar;
-    private volatile Spinner bookSpinner;
+    private Spinner bookSpinner;
     private TextView maxTimeView;
     private PrefsManager prefs;
     private final BroadcastReceiver onSleepStateChanged = new BroadcastReceiver() {
@@ -93,14 +93,13 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
              * Setting position as a tag, so we can make sure onItemSelected is only fired when
              * the user changes the position himself.
              */
-            Book book = db.getBook(prefs.getCurrentBookId());
+            final Book book = db.getBook(prefs.getCurrentBookId());
             if (book == null) {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content, new BookPlayFragment(), BookPlayFragment.TAG)
                         .commit();
                 return;
             }
-            L.d(TAG, "onBookSetChanged called with book=" + book);
 
             ArrayList<Chapter> chapters = book.getChapters();
             Chapter chapter = book.getCurrentChapter();
@@ -108,8 +107,9 @@ public class BookPlayFragment extends Fragment implements View.OnClickListener {
             int position = chapters.indexOf(chapter);
             bookSpinner.setTag(position);
             bookSpinner.setSelection(position, true);
-            int duration = chapter.getDuration();
+            final int duration = chapter.getDuration();
             seekBar.setMax(duration);
+
             maxTimeView.setText(formatTime(duration, duration));
 
             // Setting seekBar and played time view

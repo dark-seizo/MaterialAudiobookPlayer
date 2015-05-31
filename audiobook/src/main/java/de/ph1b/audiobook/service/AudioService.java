@@ -482,8 +482,6 @@ public class AudioService extends Service implements AudioManager.OnAudioFocusCh
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                L.d(TAG, "updateRemoteControlClient called");
-
                 Book book = controller.getBook();
                 if (book != null) {
                     Chapter c = book.getCurrentChapter();
