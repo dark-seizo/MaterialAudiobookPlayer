@@ -49,6 +49,8 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
     private ScheduledFuture<?> sleepSand;
     private ScheduledFuture updater = null;
     private volatile int prepareTries = 0;
+    private long pausedBookId = Book.ID_UNKNOWN;
+    private long pauseTime = 0L;
 
     public MediaPlayerController(@NonNull final Context c) {
         lock.lock();
@@ -155,6 +157,9 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
      * Plays the prepared file.
      */
     public void play() {
+        if (prefs.getAutoRewind()) {
+            handleAutoRewind();
+        }
         lock.lock();
         try {
             switch (state) {
@@ -361,6 +366,32 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
      * Pauses the player. Also stops the updating mechanism which constantly updates the book to the
      * database.
      */
+    private void handleAutoRewind() {
+        lock.lock();
+        try {
+            boolean isAutoRewindEnabled = prefs.getAutoRewind();
+            if (isAutoRewindEnabled && pauseTime > 0 && pausedBookId == prefs.getCurrentBookId()) {
+                long timeElapsedSincePause = Math.abs(pauseTime - System.currentTimeMillis());
+                final int threshold = 3000; //ms
+                int autoRewindAmount = (int) Math.ceil(2000 * getPlaybackSpeed()); //ms
+                if (timeElapsedSincePause > threshold) {
+                    double timeElapsedSeconds = (double) timeElapsedSincePause / 1000;
+                    autoRewindAmount += (int) (Math.log(timeElapsedSeconds) * 1000);
+                }
+                int newPosition = player.getCurrentPosition() - autoRewindAmount;
+                if (newPosition < 0)
+                    newPosition = 0;
+                player.seekTo(newPosition);
+                book.setPosition(newPosition, book.getCurrentMediaPath());
+            }
+        }
+        finally {
+            lock.unlock();
+            pauseTime = 0L;
+            pausedBookId = Book.ID_UNKNOWN;
+        }
+    }
+
     public void pause() {
         lock.lock();
         try {
@@ -368,17 +399,19 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
             if (book != null) {
                 switch (state) {
                     case STARTED:
+                        pausedBookId = book.getId();
+                        pauseTime = System.currentTimeMillis();
                         player.pause();
                         stopUpdating();
 
-                        final int autoRewind = prefs.getAutoRewindAmount() * 1000;
+/*                        final int autoRewind = prefs.getAutoRewindAmount() * 1000;
                         if (autoRewind != 0) {
                             int originalPosition = player.getCurrentPosition();
                             int seekTo = originalPosition - autoRewind;
                             if (seekTo < 0) seekTo = 0;
                             player.seekTo(seekTo);
                             book.setPosition(seekTo, book.getCurrentMediaPath());
-                        }
+                        }*/
                         db.updateBook(book);
 
                         setPlayState(PlayState.PAUSED);

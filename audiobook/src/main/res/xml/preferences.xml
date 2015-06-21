@@ -40,8 +40,10 @@
             android:key="@string/pref_key_bookmark_on_sleep"
             android:summary="@string/pref_bookmark_on_sleep_summary"
             android:title="@string/pref_bookmark_on_sleep_title" />
-        <de.ph1b.audiobook.dialog.AutoRewindDialogPreference
+        <CheckBoxPreference
             android:key="@string/pref_key_auto_rewind"
-            android:title="@string/pref_auto_rewind_title" />
+            android:summary="@string/pref_auto_rewind_summary"
+            android:title="@string/pref_auto_rewind_title"
+            android:defaultValue="false" />
     </PreferenceCategory>
 </PreferenceScreen>

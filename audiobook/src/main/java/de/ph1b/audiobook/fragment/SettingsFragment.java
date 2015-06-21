@@ -18,7 +18,6 @@ import com.afollestad.materialdialogs.prefs.MaterialListPreference;
 import de.ph1b.audiobook.R;
 import de.ph1b.audiobook.activity.BaseActivity;
 import de.ph1b.audiobook.activity.FolderOverviewActivity;
-import de.ph1b.audiobook.dialog.AutoRewindDialogPreference;
 import de.ph1b.audiobook.dialog.DonationDialogFragment;
 import de.ph1b.audiobook.dialog.SeekDialogPreference;
 import de.ph1b.audiobook.dialog.SleepDialogPreference;
@@ -94,12 +93,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         String seekSummary = seekAmount + " " + getString(R.string.seconds);
         SeekDialogPreference seekDialogPreference = (SeekDialogPreference) findPreference(getString(R.string.pref_key_seek_time));
         seekDialogPreference.setSummary(seekSummary);
-
-        // auto rewind pref
-        int autoRewindAmount = prefs.getAutoRewindAmount();
-        String autoRewindSummary = autoRewindAmount + " " + getString(R.string.seconds);
-        AutoRewindDialogPreference autoRewindDialogPreference = (AutoRewindDialogPreference) findPreference(getString(R.string.pref_key_auto_rewind));
-        autoRewindDialogPreference.setSummary(autoRewindSummary);
 
         // sleep pref
         int sleepAmount = prefs.getSleepTime();

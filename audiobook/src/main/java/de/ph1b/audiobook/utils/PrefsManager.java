@@ -177,9 +177,13 @@ public class PrefsManager {
      *
      * @return the rewind amount
      */
-    public synchronized int getAutoRewindAmount() {
-        return sp.getInt(c.getString(R.string.pref_key_auto_rewind), 2);
+    public synchronized  boolean getAutoRewind() {
+        return sp.getBoolean(c.getString(R.string.pref_key_auto_rewind), false);
     }
+/*    public synchronized int getAutoRewindAmount() {
+        return sp.getInt(c.getString(R.string.pref_key_auto_rewind), 2);
+    }*/
+
 
     /**
      * Sets the time the player should rewind on manual pausing.
