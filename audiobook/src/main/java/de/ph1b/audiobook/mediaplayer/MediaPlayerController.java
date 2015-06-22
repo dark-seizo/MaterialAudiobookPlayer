@@ -157,9 +157,6 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
      * Plays the prepared file.
      */
     public void play() {
-        if (prefs.getAutoRewind()) {
-            handleAutoRewind();
-        }
         lock.lock();
         try {
             switch (state) {
@@ -167,6 +164,9 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
                     player.seekTo(0);
                 case PREPARED:
                 case PAUSED:
+                    if (prefs.getAutoRewind()) {
+                        handleAutoRewind();
+                    }
                     player.start();
                     startUpdating();
                     setPlayState(PlayState.PLAYING);
@@ -403,15 +403,6 @@ public class MediaPlayerController implements MediaPlayer.OnErrorListener,
                         pauseTime = System.currentTimeMillis();
                         player.pause();
                         stopUpdating();
-
-/*                        final int autoRewind = prefs.getAutoRewindAmount() * 1000;
-                        if (autoRewind != 0) {
-                            int originalPosition = player.getCurrentPosition();
-                            int seekTo = originalPosition - autoRewind;
-                            if (seekTo < 0) seekTo = 0;
-                            player.seekTo(seekTo);
-                            book.setPosition(seekTo, book.getCurrentMediaPath());
-                        }*/
                         db.updateBook(book);
 
                         setPlayState(PlayState.PAUSED);
